@@ -7,16 +7,15 @@ using System.Threading.Tasks;
 
 namespace Web1.Config
 {
-    public class ServiceFabricConfigProvider : ConfigurationProvider
+    public class ServiceFabricConfigurationProvider : ConfigurationProvider
     {
         private readonly string _packageName;
         private readonly CodePackageActivationContext _context;
 
-        public ServiceFabricConfigProvider(string packageName)
+        public ServiceFabricConfigurationProvider(string packageName)
         {
             _packageName = packageName;
             _context = FabricRuntime.GetActivationContext();
-
             _context.ConfigurationPackageModifiedEvent += (sender, e) =>
             {
                 this.LoadPackage(e.NewPackage, reload: true);
@@ -24,14 +23,18 @@ namespace Web1.Config
             };
         }
 
+        public override void Load()
+        {
+            var config = _context.GetConfigurationPackageObject(_packageName);
+            LoadPackage(config);
+        }
+
         private void LoadPackage(ConfigurationPackage config, bool reload = false)
         {
             if (reload)
             {
-                // Recreate the dictionary to clear out any old keys
-                Data = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+                Data.Clear();  // Rememove the old keys on re-load
             }
-
             foreach (var section in config.Settings.Sections)
             {
                 foreach (var param in section.Parameters)
@@ -39,12 +42,6 @@ namespace Web1.Config
                     Data[$"{section.Name}:{param.Name}"] = param.IsEncrypted ? param.DecryptValue().ToUnsecureString() : param.Value;
                 }
             }
-        }
-
-        public override void Load()
-        {
-            var config = _context.GetConfigurationPackageObject(_packageName);
-            LoadPackage(config);
         }
     }
 }

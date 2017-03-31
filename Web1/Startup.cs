@@ -16,7 +16,7 @@ namespace Web1
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                .AddServiceFabricConfig("Config")
+                .AddServiceFabricConfig("Config") // Add Service Fabric configuration settings.
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
         }

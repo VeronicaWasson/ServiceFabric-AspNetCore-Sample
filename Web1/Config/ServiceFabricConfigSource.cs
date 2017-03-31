@@ -17,7 +17,7 @@ namespace Web1.Config
 
         public IConfigurationProvider Build(IConfigurationBuilder builder)
         {
-            return new ServiceFabricConfigProvider(PackageName);
+            return new ServiceFabricConfigurationProvider(PackageName);
         }
     }
 
