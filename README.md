@@ -38,7 +38,7 @@ private void LoadPackage(ConfigurationPackage config, bool reload = false)
 }
 ```    
 
-> Service Fabric automatically loads the `Settings.xml` configuration file, but a configuration package can contain abritrary files in any format. If you use your own file, the Service Fabric API just gives you the file path. To support other file types, you would need to parse the file and turn it into a dictionary of key/value pairs. That's outside the scope of this sample.
+> Service Fabric automatically loads the `Settings.xml` configuration file, but a configuration package can contain arbitrary files in any format. If you use your own file, the Service Fabric API just gives you the file path. To support other file types, you would need to parse the file and turn it into a dictionary of key/value pairs. That's outside the scope of this sample.
 
 It's possible to upgrade a service's configuration package without changing the code package. In that case, Service Fabric does not restart the service. Instead, the service receives a `ConfigurationPackageModifiedEvent` event to notify it that the package changed. We can hook into that event, by setting an event handler in the constructor of our provider: 
 
